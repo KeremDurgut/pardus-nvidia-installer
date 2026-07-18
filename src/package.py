@@ -504,7 +504,12 @@ def install_nouveau():
         if rc != 0:
             return False
 
-    time.sleep(5)
+    for remaining in range(5, 0, -1):
+        print("Install baslamasina {} saniye kaldi".format(remaining), flush=True)
+        time.sleep(1)
+
+    for _ in range(5):
+        print("INSTALL BASLADI", flush=True)
 
     rc = subprocess.call(["apt-get", "install", "-yq", nouveau], env={**os.environ})
     if rc != 0:
