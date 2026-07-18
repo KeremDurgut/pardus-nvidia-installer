@@ -5,6 +5,7 @@ import apt
 import sys
 import subprocess
 import apt_pkg
+import time
 
 apt_pkg.init_system()
 os.environ["DEBIAN_FRONTEND"] = "noninteractive"
@@ -497,12 +498,17 @@ def install_nouveau():
     if nvidia_pkgs:
         cmds.append(["apt-get", "purge", "-yq", *nvidia_pkgs])
     cmds.append(["apt-get", "autoremove", "-yq"])
-    cmds.append(["apt-get", "install", "-yq", nouveau])
 
     for cmd in cmds:
         rc = subprocess.call(cmd, env={**os.environ})
         if rc != 0:
             return False
+
+    time.sleep(5)
+
+    rc = subprocess.call(["apt-get", "install", "-yq", nouveau], env={**os.environ})
+    if rc != 0:
+        return False
     mark_need_reboot()
     return True
 
